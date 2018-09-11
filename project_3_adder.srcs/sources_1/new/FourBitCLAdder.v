@@ -51,7 +51,7 @@ module FourBitCLAdder(
     assign c[0] = g[0] | (p[0] & c_in);
     assign c[1] = g[1] | (g[0] & p[1]) | (c_in & p[0] & p[1]) ;
     assign c[2] = g[2] | (g[1] & p[2]) | (g[0] & p[1] & p[2]) | (c_in & p[0] & p[1] & p[2]) ;
-    assign c[3] = g[3] | (g[2] & p[3]) | (g[1] & p[2] & p[3]) | (g[0] & p[1] & p[2] & p[3]) | (c_in & p[0] & p[1] & p[2] & p[2]) ;
+    assign c[3] = g[3] | (g[2] & p[3]) | (g[1] & p[2] & p[3]) | (g[0] & p[1] & p[2] & p[3]) | (c_in & p[0] & p[1] & p[2] & p[3]) ;
 
 
     assign sum[0] = c_in ^ a[0] ^ b[0];

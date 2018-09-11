@@ -30,14 +30,42 @@ wire          c_out;
 
 top uut(c_in, a, b, sum, c_out);
 
+reg [8:0] temp = 0;
+
 initial begin
     #100 c_in = 0; a = 0; b = 0;
-    #100 c_in = 0; a = 8'hF0; b = 8'h01;
-    #100 assert( sum == 8'hF1 && c_out == 0 ) else $fatal(1, "1 failed");
-    #100 c_in = 0; a = 8'hFF; b = 8'h01;
-    #100 assert( sum == 8'h00 && c_out == 1 ) else $fatal(1, "2 failed");
-    #100 c_in = 0; a = 8'hF1; b = 8'h01;
-    #100 assert( sum == 8'hF2 && c_out == 0 ) else $fatal(1, "3 failed");        
+    for(a = 0; a < 8'hff ; a = a+1) begin
+        for(b = 0; b < 8'hff ; b = b+1) begin
+            #100 c_in = 0;
+            #100 temp = a + b + c_in;
+            #100 assert( sum == temp[7:0] && c_out == temp[8] ) 
+            else begin
+                $display("a = %h b = %h cin = %b sum = %2h temp = %3h cout = %b",a,b,c_in,sum,temp,c_out);
+                $fatal(1, "failed");
+            end
+            #100 c_in = 1;
+            #100 temp = a + b + c_in;
+            #100 assert( sum == temp[7:0] && c_out == temp[8] ) 
+            else begin
+                $display("a = %h b = %h cin = %b sum = %2h temp = %3h cout = %b",a,b,c_in,sum,temp,c_out);
+                $fatal(1, "failed");
+            end
+        end
+    end
+    #100 c_in = 0; a = 8'hff; b = 8'hff;
+    #100 temp = a + b + c_in; 
+    #100 assert( sum == temp[7:0] && c_out == temp[8] )
+    else begin
+        $display("a = %h b = %h cin = %b sum = %2h temp = %3h cout = %b",a,b,c_in,sum,temp,c_out);
+        $fatal(1, "failed");
+    end
+    #100 c_in = 1; a = 8'hff; b = 8'hff;
+    #100 temp = a + b + c_in; 
+    #100 assert( sum == temp[7:0] && c_out == temp[8] )
+    else begin
+        $display("a = %h b = %h cin = %b sum = %2h temp = %3h cout = %b",a,b,c_in,sum,temp,c_out);
+        $fatal(1, "failed");
+    end
     $display("@@@Passed");
     $finish;
 end

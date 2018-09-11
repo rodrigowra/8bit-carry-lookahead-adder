@@ -30,14 +30,42 @@ wire          c_out;
 
 FourBitCLAdder uut(c_in, a, b, sum, c_out);
 
+reg [4:0] temp = 0;
+
 initial begin
     #100 c_in = 0; a = 0; b = 0;
-    #100 c_in = 0; a = 4'b0001; b = 4'b0001;
-    #100 assert( sum == 4'b0010 && c_out == 0 ) else $fatal(1, "1 failed");
-    #100 c_in = 0; a = 4'b1111; b = 4'b0001;
-    #100 assert( sum == 4'b0000 && c_out == 1 ) else $fatal(1, "2 failed");
-    #100 c_in = 1; a = 4'b1100; b = 4'b0001;
-    #100 assert( sum == 4'b1110 && c_out == 0 ) else $fatal(1, "3 failed");
+    for(a = 0; a < 4'hf ; a = a+1) begin
+        for(b = 0; b < 4'hf ; b = b+1) begin
+            #100 c_in = 0;
+            #100 temp = a + b + c_in;
+            #100 assert( sum == temp[3:0] && c_out == temp[4] ) 
+            else begin
+                $display("a = %h b = %h cin = %b sum = %4b temp = %5b cout = %b",a,b,c_in,sum,temp,c_out);
+                $fatal(1, "failed");
+            end
+            #100 c_in = 1;
+            #100 temp = a + b + c_in;
+            #100 assert( sum == temp[3:0] && c_out == temp[4] ) 
+            else begin
+                $display("a = %h b = %h cin = %b sum = %4b temp = %5b cout = %b",a,b,c_in,sum,temp,c_out);
+                $fatal(1, "failed");
+            end
+        end
+    end
+    #100 c_in = 0; a = 4'hf; b = 4'hf;
+    #100 temp = a + b + c_in; 
+    #100 assert( sum == temp[3:0] && c_out == temp[4] )
+    else begin
+        $display("a = %h b = %h cin = %b sum = %4b temp = %5b cout = %b",a,b,c_in,sum,temp,c_out);
+        $fatal(1, "failed");
+    end
+    #100 c_in = 1; a = 4'hf; b = 4'hf;
+    #100 temp = a + b + c_in; 
+    #100 assert( sum == temp[3:0] && c_out == temp[4] )
+    else begin
+        $display("a = %h b = %h cin = %b sum = %4b temp = %5b cout = %b",a,b,c_in,sum,temp,c_out);
+        $fatal(1, "failed");
+    end
     $display("@@@Passed");
     $finish;
 end
